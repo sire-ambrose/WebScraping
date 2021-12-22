@@ -27,8 +27,17 @@ def name_cip(j):
   request=requests.get( j )
   soup = bs4.BeautifulSoup(request.text, "html.parser")
   for children in soup.findChildren('div',{'class':'description'}):
-    name=children.find(class_="name").text
-    cip=children.find(class_="cip13").text
+    try:
+      name=children.find(class_="name").text
+    except:
+      name= None
+
+    try:
+      cip=children.find(class_="cip13").text
+    except:
+      cip= ''
+
+
   return name, cip
 # Fetch the URL data using requests.get(url),
 # store it in a variable, request_result.
@@ -48,17 +57,21 @@ for info in lst:
 
 NAME, CIP= [], []
 
+g= 0
+
 for link in links:
   alpha_link= get_alpha_link(link)
   for i in alpha_link:
     last=last_link(i)
     for j in last:
       name, cip= name_cip(j)
-      print('name: ', name, 'cip: ', cip)
+      print('name: ', name, '     ','cip: ', cip)
       NAME.append(name)
       CIP.append(cip)
-  pd.DataFrame({'name': NAME, 'CIP':CIP}).to_excel(link+'.xlsx', index= False)
-  print('\n\n\n\n\n\n\n\ndone')
+
+  pd.DataFrame({'name': NAME, 'CIP':CIP}).to_excel('product_A.xlsx', index= False)
+  print('\n\n\ndone')
+  break
           
 
 pd.DataFrame({'name': NAME, 'CIP':CIP}).to_excel('products.xlsx', index= False)
