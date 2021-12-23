@@ -3,11 +3,8 @@ import bs4
 import pandas as pd
 
 def listToString(s): 
-    
-    # initialize an empty string
     str1 = " " 
-    
-    # return string  
+
     return (str1.join(s))
         
 
@@ -39,18 +36,27 @@ def get(url):
     print('\nquote: ', quote, '\nauthor: ', author, '\ntags: ', tags ,'\nlikes: ', likes, '\n')
 
   return Quotes, Author, Tags, Likes
-QUOTES, AUTHOR, TAGS, LIKES=[], [], [], []
-###you can change the first url to the url of the quotes of your choice
-### you can also change the max_page to change the amount of pages to scrape
-max_page= 46
-for i in range(1,max_page):
-  url='https://www.goodreads.com/quotes/tag/christmas'
-  url= f'{url}?page={i}'
-  q,a,t,l= get(url)
-  QUOTES.extend(q)
-  AUTHOR.extend(a)
-  TAGS.extend(t)
-  LIKES.extend(l)
 
 
-pd.DataFrame({'quote':QUOTES, 'author':AUTHOR, 'tags': TAGS, 'likes': LIKES}).to_csv('christmas_quotes.csv', index=False)
+
+def get_all():
+  url= input('enter goodread url: ')
+  max_page= int(input('number of pages: '))
+  file_name= url[url.rfind('.')+1:]
+  QUOTES, AUTHOR, TAGS, LIKES=[], [], [], []
+  
+  for i in range(1,max_page):
+    url_= f'{url}?page={i}'
+    q,a,t,l= get(url_)
+    QUOTES.extend(q)
+    AUTHOR.extend(a)
+    TAGS.extend(t)
+    LIKES.extend(l)
+
+  pd.DataFrame({'quote':QUOTES, 'author':AUTHOR, 'tags': TAGS, 'likes': LIKES}).to_csv(file_name+'.csv', index=False)
+
+  print('.............................................\nDone\n')
+
+
+
+get_all()
